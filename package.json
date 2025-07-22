@@ -1,0 +1,17 @@
+{
+  "name": "algorithm-visualizer-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "author": "BilloDoom",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "pegjs": "^0.10.0"
+  }
+}

@@ -1,7 +1,7 @@
 export function preprocess(code) {
     const lines = code.split('\n');
-    const INDENT = 'INDENT';
-    const DEDENT = 'DEDENT';
+    const INDENT = '>>>>';
+    const DEDENT = '<<<<';
 
     let indentStack = [0];
     const output = [];
@@ -12,9 +12,12 @@ export function preprocess(code) {
 
         if (trimmed === '' || trimmed.startsWith('#')) continue;
 
-        const indent = line.match(/^ */)[0].length;
+        const indentMatch = line.match(/^ */);
+        const indent = indentMatch ? indentMatch[0].length : 0;
 
-        if (indent > indentStack[indentStack.length - 1]) {
+        const currentIndent = indentStack[indentStack.length - 1];
+
+        if (indent > currentIndent) {
             indentStack.push(indent);
             output.push(INDENT);
         } else {
@@ -22,8 +25,11 @@ export function preprocess(code) {
                 indentStack.pop();
                 output.push(DEDENT);
             }
-        }
 
+            if (indent !== indentStack[indentStack.length - 1]) {
+                throw new Error(`Inconsistent indentation at line: "${line}"`);
+            }
+        }
         output.push(trimmed);
     }
 

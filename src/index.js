@@ -1,15 +1,11 @@
-import { parse } from './parser.js';
+// src/index.js
+import { compileAndRun } from './runner.js';
 import { readFileSync } from 'fs';
-import { interpret } from './interpreter.js';
 
-const code = readFileSync('./examples/test.pseudo', 'utf8');
+const inputCode = readFileSync('./examples/test.algv', 'utf8');
+const result = compileAndRun(inputCode);
 
-try {
-    const ast = parse(code);
-    console.log('Parsed AST:');
-    console.log(JSON.stringify(ast, null, 2));
-    console.log('\nProgram Output:');
-    interpret(ast);
-} catch (e) {
-    console.error('Error:', e.message);
-}
+console.log('=== Transpiled JS ===');
+console.log(result.transpiled);
+console.log('\n=== Output ===');
+console.log(result.output.join('\n'));

@@ -1,6 +1,6 @@
 // === Entry Point ===
 Program
-  = _NL statements:StatementList _NL EOF {
+  = _NL? statements:StatementList _NL? EOF {
       return { type: "Program", body: statements };
     }
 
@@ -8,7 +8,12 @@ EOF = !.
 
 // === Statement List ===
 StatementList
-  = s:(Statement _NL)* { return s.map(x => x[0]); }
+  = statements:(Statement (_NL+ Statement)*)? {
+      const list = statements
+        ? [statements[0], ...(statements[1] || []).map(pair => pair[1])]
+        : [];
+      return list;
+    }
 
 Statement
   = FunctionDef
@@ -19,12 +24,12 @@ Statement
   / Expression
 
 Block
-  = INDENT _NL statements:StatementList DEDENT {
-      return { type: "Block", body: statements };
+  = _NL* INDENT _NL+ body:StatementList _NL+ DEDENT {
+      return { type: "Block", body };
     }
 
-INDENT = "INDENT"
-DEDENT = "DEDENT"
+INDENT = ">>>>"
+DEDENT = "<<<<"
 
 // === Statements ===
 Assignment
@@ -117,14 +122,12 @@ String
   = "\"" chars:$(Char*) "\"" { return { type: "Literal", value: chars }; }
 
 Char
-  = !["] .
+  = !["\n\r] .
 
-// === Helpers ===
-_NL
-  = ([ \t]* ("\r"? "\n")?)*
-
-__
-  = [ \t\r\n]+
+// === Whitespace ===
+_  = [ \t]*                 // Optional whitespace (no newlines)
+__ = [ \t]+                 // Required space
+_NL = ([ \t]* ("\r"? "\n"))+  // Required newline(s)
 
 Letter = [a-zA-Z_]
 Digit  = [0-9]

@@ -11,7 +11,10 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "nodemon": "^3.1.10",
-    "pegjs": "^0.10.0"
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "binaryen": "^123.0.0",
+    "peggy": "^5.0.5"
   }
 }

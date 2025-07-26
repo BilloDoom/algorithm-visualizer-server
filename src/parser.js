@@ -1,4 +1,4 @@
-import peg from 'pegjs';
+import peg from 'peggy';
 import { readFileSync } from 'fs';
 import { preprocess } from './preprocess.js';
 
@@ -7,8 +7,5 @@ const parser = peg.generate(grammar);
 
 export function parse(code) {
   const preprocessed = preprocess(code);
-  console.log('Preprocessed Code:');
-  console.log(preprocessed);
-  console.log(preprocessed.split('\n'));
   return parser.parse(preprocessed);
 }

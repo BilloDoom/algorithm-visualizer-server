@@ -36,9 +36,10 @@ function generateExpression(expr) {
             return JSON.stringify(expr.value);
         case 'BinaryExpression':
             return `(${generateExpression(expr.left)} ${expr.operator} ${generateExpression(expr.right)})`;
-        case 'CallExpression':
         case 'CallExpression': {
             let calleeName = expr.callee.name;
+            calleeName = toCamelCase(calleeName);
+            
             const args = expr.arguments.map(generateExpression).join(', ');
 
             const mappedName = functionMappings[calleeName] || calleeName;
@@ -52,4 +53,8 @@ function generateExpression(expr) {
 
 function indent(text) {
     return text.split('\n').map(line => '  ' + line).join('\n');
+}
+
+function toCamelCase(snake) {
+  return snake.replace(/_([a-z])/g, (_, char) => char.toUpperCase());
 }
